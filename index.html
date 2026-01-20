@@ -1,1 +1,374 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Calendar, 
+  MapPin, 
+  Zap, 
+  Monitor, 
+  Smartphone, 
+  Settings, 
+  CheckCircle, 
+  Users, 
+  Star, 
+  ChevronRight, 
+  Globe,
+  Mail,
+  Phone
+} from 'lucide-react';
 
+const App = () => {
+  const [formData, setFormData] = useState({
+    type: 'buyer',
+    name: '',
+    company: '',
+    email: '',
+    date: '',
+    interest: 'L1000'
+  });
+
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Simulate API call
+    setIsSubmitted(true);
+    setTimeout(() => setIsSubmitted(false), 5000);
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  return (
+    <div className="min-h-screen bg-white font-sans text-gray-900 overflow-x-hidden">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-xl italic">Z</span>
+            </div>
+            <span className="text-xl font-black tracking-tighter text-blue-900 uppercase">Zeus</span>
+          </div>
+          <div className="hidden md:flex gap-8 text-sm font-medium text-gray-600">
+            <a href="#benefits" className="hover:text-blue-600 transition">Key Benefits</a>
+            <a href="#proof" className="hover:text-blue-600 transition">Proven Quality</a>
+            <a href="#info" className="hover:text-blue-600 transition">Exhibition Info</a>
+            <a href="#reserve" className="text-blue-600 font-bold underline underline-offset-4 tracking-tight uppercase">Reserve Now</a>
+          </div>
+          <button onClick={() => document.getElementById('reserve').scrollIntoView({behavior:'smooth'})} 
+                  className="bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-200 uppercase tracking-tight">
+            IFA 2026 RSVP
+          </button>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-blue-50/50 -z-10 rounded-l-[100px]" />
+        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-8">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold uppercase tracking-widest">
+              <Globe size={14} /> IFA 2026 · Berlin · Hall 3.2
+            </div>
+            <h1 className="text-5xl lg:text-7xl font-black text-gray-900 leading-[1.05] tracking-tight">
+              Ready to <br/>Replace Your TV? <br/>
+              <span className="text-blue-600">Zeus Smart Projector</span>
+            </h1>
+            <p className="text-xl text-gray-600 leading-relaxed max-w-xl">
+              Experience the pinnacle of K-Tech innovation. Ultra-low power consumption for sustainable living, powered by Android 13 OS. Join us at IFA 2026 Berlin to redefine your home cinema.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button onClick={() => document.getElementById('reserve').scrollIntoView({behavior:'smooth'})}
+                      className="px-8 py-4 bg-blue-600 text-white rounded-xl font-bold text-lg hover:bg-blue-700 transition flex items-center justify-center gap-2 shadow-xl shadow-blue-100">
+                B2B Partnership Inquiry <ChevronRight size={20} />
+              </button>
+              <button onClick={() => document.getElementById('reserve').scrollIntoView({behavior:'smooth'})}
+                      className="px-8 py-4 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-bold text-lg hover:border-blue-300 transition flex items-center justify-center gap-2">
+                Book a Live Demo
+              </button>
+            </div>
+            <p className="text-sm text-gray-400 font-medium">
+              * September 4–8, 2026, Messe Berlin (Limited slots, Multi-language support)
+            </p>
+          </div>
+          <div className="relative">
+            <div className="w-full aspect-video bg-gray-200 rounded-3xl overflow-hidden shadow-2xl relative group">
+              <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&q=80&w=1000" 
+                   alt="Zeus Projector Life" 
+                   className="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-8 text-white">
+                <p className="font-bold text-lg">Flagship: Zeus L1000 Series</p>
+                <p className="text-sm opacity-80 uppercase tracking-widest">Full HD | Android 13 | Wi-Fi 6 | Ultra Efficient</p>
+              </div>
+            </div>
+            <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl hidden md:block border border-gray-100">
+              <div className="flex items-center gap-4">
+                <div className="text-center">
+                  <p className="text-3xl font-black text-blue-600 tracking-tighter">95%</p>
+                  <p className="text-[10px] text-gray-400 font-bold uppercase">Sold Out Rate</p>
+                </div>
+                <div className="w-px h-10 bg-gray-100" />
+                <div className="text-center">
+                  <p className="text-3xl font-black text-blue-600 tracking-tighter">4.9/5</p>
+                  <p className="text-[10px] text-gray-400 font-bold uppercase">User Rating</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section id="benefits" className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4 tracking-tight">
+            One Device, <br className="md:hidden"/> Infinite Possibilities
+          </h2>
+          <p className="text-gray-500 mb-16 max-w-2xl mx-auto font-medium">
+            From home cinema to camping and commercial spaces.
+          </p>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { 
+                icon: <Zap className="text-yellow-500" />, 
+                title: "Ultra Low Energy", 
+                desc: "Designed for sustainability. Minimal electricity costs even with 24/7 operation in cafes or studios." 
+              },
+              { 
+                icon: <Monitor className="text-blue-500" />, 
+                title: "Smart Ecosystem", 
+                desc: "Native Android 13 support. Stream Netflix and YouTube in Full HD without extra devices." 
+              },
+              { 
+                icon: <Settings className="text-purple-500" />, 
+                title: "Auto-Calibration", 
+                desc: "Auto-focus and 4D keystone correction. Point and play on any surface instantly." 
+              },
+              { 
+                icon: <Smartphone className="text-green-500" />, 
+                title: "Seamless Connectivity", 
+                desc: "Powered by Wi-Fi 6 and Bluetooth 5.0 for lag-free streaming and gaming." 
+              }
+            ].map((item, idx) => (
+              <div key={idx} className="bg-white p-8 rounded-2xl border border-gray-100 hover:shadow-xl transition group text-left">
+                <div className="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-50 transition">
+                  {React.cloneElement(item.icon, { size: 28 })}
+                </div>
+                <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Social Proof Section */}
+      <section id="proof" className="py-24">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="bg-blue-900 rounded-[40px] p-10 lg:p-20 text-white relative overflow-hidden text-center">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 blur-[100px] rounded-full" />
+            
+            <div className="mb-16 relative z-10">
+              <h2 className="text-3xl md:text-5xl font-black mb-6 italic tracking-tight">
+                "Validated in Korea, <br/> Premiering at IFA Berlin"
+              </h2>
+              <div className="flex flex-wrap justify-center gap-10 mt-12">
+                <div className="text-center">
+                  <p className="text-gray-400 text-xs font-bold uppercase mb-1">Market Dominance</p>
+                  <p className="text-3xl font-black tracking-tight">TOP 3 HOME SHOPPING</p>
+                  <p className="text-sm text-blue-300">Multiple sold-out broadcasts</p>
+                </div>
+                <div className="w-px h-16 bg-white/10 hidden md:block" />
+                <div className="text-center">
+                  <p className="text-gray-400 text-xs font-bold uppercase mb-1">Global Standard</p>
+                  <p className="text-3xl font-black tracking-tight">4.9 / 5.0 STARS</p>
+                  <p className="text-sm text-blue-300">Trusted by thousands of real users</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8 relative z-10 text-left">
+              {[
+                { 
+                  text: "At this price point, the image quality and auto-setup are unmatched. I barely turn on my TV anymore.",
+                  author: "User A, Home Cinema Enthusiast"
+                },
+                { 
+                  text: "Great for my cafe menu boards. Energy efficient and bright enough even during the daytime.",
+                  author: "User B, Cafe Operator"
+                },
+                { 
+                  text: "An absolute essential for camping. The built-in OS and speakers make it so convenient outdoors.",
+                  author: "User C, Outdoor Explorer"
+                }
+              ].map((review, idx) => (
+                <div key={idx} className="bg-white/10 backdrop-blur-sm p-8 rounded-3xl border border-white/10">
+                  <div className="flex gap-1 text-yellow-400 mb-4">
+                    {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="currentColor" />)}
+                  </div>
+                  <p className="text-lg font-medium leading-relaxed mb-6">"{review.text}"</p>
+                  <p className="text-sm text-blue-200 font-bold uppercase tracking-wider">{review.author}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* IFA Info Section */}
+      <section id="info" className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-start">
+          <div>
+            <h2 className="text-4xl font-black text-gray-900 mb-8 tracking-tight uppercase">How to meet <br/>Zeus at IFA 2026</h2>
+            <div className="space-y-6">
+              <div className="flex gap-6 items-start p-6 bg-gray-50 rounded-2xl">
+                <Calendar className="text-blue-600 mt-1" />
+                <div>
+                  <h4 className="font-bold text-lg mb-1">Schedule</h4>
+                  <p className="text-gray-600">Sept 4 (Fri) – Sept 8 (Tue), 2026 | 10:00 – 18:00</p>
+                </div>
+              </div>
+              <div className="flex gap-6 items-start p-6 bg-gray-50 rounded-2xl border-2 border-blue-600 shadow-lg shadow-blue-50">
+                <MapPin className="text-blue-600 mt-1" />
+                <div>
+                  <h4 className="font-bold text-lg mb-1 uppercase tracking-tight">Booth Location (Core Zone)</h4>
+                  <p className="text-blue-900 font-black text-2xl">Hall 3.2 · Booth 123</p>
+                  <p className="text-gray-600 text-sm font-medium">ZEUS Mini Beam & Small Appliances Zone</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-12 space-y-4">
+              <h4 className="font-black text-xl text-gray-900 uppercase tracking-widest">Exhibition Benefits</h4>
+              <ul className="space-y-4">
+                <li className="flex items-center gap-3 text-gray-700 font-medium">
+                  <CheckCircle size={18} className="text-blue-600" /> Exclusive B2B MOQ & Reseller Programs
+                </li>
+                <li className="flex items-center gap-3 text-gray-700 font-medium">
+                  <CheckCircle size={18} className="text-blue-600" /> On-site Contract Bonus & Marketing Support
+                </li>
+                <li className="flex items-center gap-3 text-gray-700 font-medium">
+                  <CheckCircle size={18} className="text-blue-600" /> Special IFA Bundle Discounts for Visitors
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div id="reserve" className="bg-white border border-gray-100 rounded-[40px] shadow-2xl p-8 lg:p-12 relative">
+            <h3 className="text-2xl font-black mb-2 text-center uppercase tracking-tight">Request a Meeting</h3>
+            <p className="text-gray-400 text-center mb-10 text-sm">Professional consulting and translation support available.</p>
+            
+            {isSubmitted ? (
+              <div className="py-20 text-center space-y-4">
+                <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <CheckCircle size={32} />
+                </div>
+                <h4 className="text-2xl font-bold">Request Submitted!</h4>
+                <p className="text-gray-500">A representative will contact you within 24 hours to confirm the schedule.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="flex gap-2 p-1 bg-gray-100 rounded-xl mb-4">
+                  <button type="button" 
+                          onClick={() => setFormData({...formData, type: 'buyer'})}
+                          className={`flex-1 py-2 rounded-lg text-sm font-bold transition uppercase ${formData.type === 'buyer' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500'}`}>
+                    Buyer (B2B)
+                  </button>
+                  <button type="button"
+                          onClick={() => setFormData({...formData, type: 'visitor'})}
+                          className={`flex-1 py-2 rounded-lg text-sm font-bold transition uppercase ${formData.type === 'visitor' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500'}`}>
+                    Visitor (B2C)
+                  </button>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <input type="text" name="name" required placeholder="Full Name" onChange={handleChange}
+                         className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-blue-300 focus:outline-none transition" />
+                  <input type="text" name="company" placeholder="Company (Optional)" onChange={handleChange}
+                         className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-blue-300 focus:outline-none transition" />
+                </div>
+                <input type="email" name="email" required placeholder="Business Email" onChange={handleChange}
+                       className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-blue-300 focus:outline-none transition" />
+                
+                <div className="grid md:grid-cols-2 gap-4">
+                  <select name="date" required onChange={handleChange}
+                          className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-blue-300 focus:outline-none transition">
+                    <option value="">Preferred Date</option>
+                    <option value="9-4">Sept 4 (Fri)</option>
+                    <option value="9-5">Sept 5 (Sat)</option>
+                    <option value="9-6">Sept 6 (Sun)</option>
+                    <option value="9-7">Sept 7 (Mon)</option>
+                    <option value="9-8">Sept 8 (Tue)</option>
+                  </select>
+                  <select name="interest" onChange={handleChange}
+                          className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-blue-300 focus:outline-none transition">
+                    <option value="L1000">Interest: Zeus L1000</option>
+                    <option value="C1000">Interest: Zeus C1000</option>
+                    <option value="Camping">Interest: Portable/Camping</option>
+                    <option value="HomeAppliance">Interest: Small Appliances</option>
+                  </select>
+                </div>
+
+                <textarea placeholder="Tell us about your target market or specific inquiries." rows="3"
+                          className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-blue-300 focus:outline-none transition"></textarea>
+
+                <button type="submit" className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold text-lg hover:bg-blue-700 transition shadow-xl shadow-blue-100 uppercase tracking-widest">
+                  {formData.type === 'buyer' ? 'Confirm B2B Inquiry' : 'Confirm Live Demo Booking'}
+                </button>
+                <p className="text-[10px] text-gray-400 text-center leading-tight">
+                  Your information is used solely for IFA 2026 booth coordination and will not be shared with third parties.
+                </p>
+              </form>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Brand & Footer */}
+      <footer className="bg-gray-50 border-t border-gray-200 pt-20 pb-10">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+            <div className="lg:col-span-2 text-left">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center text-white font-bold italic text-sm">Z</div>
+                <span className="text-lg font-black tracking-tighter text-blue-900 uppercase">Zeus</span>
+              </div>
+              <p className="text-gray-500 max-w-md leading-relaxed text-sm">
+                Zeus is a South Korean brand specialized in smart mini-projectors and home appliances. We believe that everyone deserves high-quality smart lifestyle solutions at an affordable price. Experience our screen everywhere—from home cinemas to cafes, classrooms, and outdoor campsites.
+              </p>
+            </div>
+            <div className="text-left">
+              <h5 className="font-bold mb-6 uppercase text-sm tracking-widest">Contact</h5>
+              <div className="space-y-4 text-sm text-gray-600">
+                <p className="flex items-center gap-3"><Mail size={16} /> sales@zeusbeam.co.kr</p>
+                <p className="flex items-center gap-3"><Globe size={16} /> www.zeusbeam.co.kr</p>
+                <p className="flex items-center gap-3"><Phone size={16} /> +82 (0)2-123-4567</p>
+              </div>
+            </div>
+            <div className="text-left">
+              <h5 className="font-bold mb-6 uppercase text-sm tracking-widest">Social</h5>
+              <div className="flex gap-4">
+                {['Instagram', 'Facebook', 'LinkedIn'].map(sns => (
+                  <div key={sns} className="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center hover:bg-blue-50 hover:border-blue-200 transition cursor-pointer">
+                    <span className="sr-only">{sns}</span>
+                    <div className="w-5 h-5 bg-gray-300 rounded-sm" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+            <p>© 2026 Zeus Beam Projector. Designed in South Korea.</p>
+            <div className="flex gap-6">
+              <a href="#" className="hover:text-blue-600 transition">Privacy Policy</a>
+              <a href="#" className="hover:text-blue-600 transition">Terms of Service</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
