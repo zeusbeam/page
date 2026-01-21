@@ -1,300 +1,335 @@
-import React, { useState } from 'react';
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zeus | IFA 2026 Berlin - K-Tech Innovation</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & Babel CDNs -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-// --- Inline SVG Icons (Zero Dependency) ---
-const GlobalIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-);
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
 
-const CalendarIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-);
+    <script type="text/babel">
+        const { useState } = React;
 
-const MapPinIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-);
+        // --- Inline SVG Icons (Optimized for Production) ---
+        const GlobalIcon = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        );
 
-const ZapIcon = ({ size = 24 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-);
+        const CalendarIcon = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        );
 
-const MonitorIcon = ({ size = 24 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-);
+        const MapPinIcon = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        );
 
-const SettingsIcon = ({ size = 24 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33 1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82 1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-);
+        const ZapIcon = ({ size = 24 }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        );
 
-const SmartphoneIcon = ({ size = 24 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-);
+        const MonitorIcon = ({ size = 24 }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        );
 
-const ArrowRightIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-);
+        const SettingsIcon = ({ size = 24 }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33 1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82 1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        );
 
-const StarIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-);
+        const SmartphoneIcon = ({ size = 24 }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        );
 
-const App = () => {
-  const [formData, setFormData] = useState({
-    type: 'buyer',
-    name: '',
-    company: '',
-    email: '',
-    date: '',
-    interest: 'L1000'
-  });
-  const [isSubmitted, setIsSubmitted] = useState(false);
+        const ArrowRightIcon = () => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        );
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 5000);
-  };
+        const StarIcon = () => (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        );
 
-  const scrollToSection = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+        const App = () => {
+            const [formData, setFormData] = useState({
+                type: 'buyer',
+                name: '',
+                company: '',
+                email: '',
+                date: '',
+                interest: 'L1000'
+            });
+            const [isSubmitted, setIsSubmitted] = useState(false);
 
-  return (
-    <div className="min-h-screen bg-white font-sans text-gray-900 w-full overflow-x-hidden">
-      {/* Navbar */}
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-black italic">Z</div>
-            <span className="text-xl font-black text-blue-900 tracking-tighter uppercase">Zeus</span>
-          </div>
-          <div className="hidden md:flex gap-8 text-[11px] font-black text-gray-400 uppercase tracking-widest">
-            <button onClick={() => scrollToSection('benefits')} className="hover:text-blue-600 transition">Benefits</button>
-            <button onClick={() => scrollToSection('proof')} className="hover:text-blue-600 transition">Proven</button>
-            <button onClick={() => scrollToSection('info')} className="hover:text-blue-600 transition">Exhibition</button>
-          </div>
-          <button 
-            onClick={() => scrollToSection('reserve')}
-            className="bg-blue-600 text-white px-6 py-2 rounded-full text-[10px] font-black uppercase shadow-lg shadow-blue-200 transition-colors hover:bg-blue-700"
-          >
-            IFA 2026 RSVP
-          </button>
-        </div>
-      </nav>
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                setIsSubmitted(true);
+                setTimeout(() => setIsSubmitted(false), 5000);
+            };
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-24 md:pt-56 md:pb-48 bg-gradient-to-b from-white to-blue-50/20 flex items-center justify-center">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 text-center space-y-10 animate-in fade-in slide-in-from-bottom duration-1000">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-[12px] font-black uppercase tracking-widest mx-auto">
-            <GlobalIcon /> IFA 2026 · Berlin · Hall 3.2
-          </div>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-gray-900 leading-tight tracking-tighter">
-            Ready to <br/>Replace Your TV? <br/>
-            <span className="text-blue-600">Zeus Projector</span>
-          </h1>
-          <p className="text-lg md:text-2xl text-gray-500 max-w-3xl mx-auto font-medium leading-relaxed">
-            Experience the pinnacle of K-Tech innovation for global buyers. <br className="hidden md:block"/>
-            Ultra-efficient power management and Android 13 integration. 
-          </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center pt-4">
-            <button 
-              onClick={() => scrollToSection('reserve')}
-              className="px-10 py-5 bg-blue-600 text-white rounded-2xl font-black text-lg uppercase tracking-widest hover:bg-blue-700 shadow-2xl shadow-blue-200 flex items-center justify-center gap-3 transition-transform hover:scale-105"
-            >
-              B2B PARTNERSHIP <ArrowRightIcon />
-            </button>
-            <button 
-              onClick={() => scrollToSection('reserve')}
-              className="px-10 py-5 bg-white border-2 border-gray-200 text-gray-900 rounded-2xl font-black text-lg uppercase tracking-widest hover:border-blue-300 transition-transform hover:scale-105"
-            >
-              BOOK LIVE DEMO
-            </button>
-          </div>
-          <div className="flex justify-center items-center gap-8 pt-10">
-            <div className="text-center">
-              <p className="text-3xl font-black text-blue-600 tracking-tighter italic">95%</p>
-              <p className="text-[10px] text-gray-400 font-black uppercase">Sold Out</p>
-            </div>
-            <div className="w-px h-12 bg-gray-200" />
-            <div className="text-center">
-              <p className="text-3xl font-black text-blue-600 tracking-tighter italic">4.9/5</p>
-              <p className="text-[10px] text-gray-400 font-black uppercase">User Rating</p>
-            </div>
-            <div className="w-px h-12 bg-gray-200" />
-            <div className="text-center">
-              <p className="text-3xl font-black text-blue-600 tracking-tighter italic">K-Tech</p>
-              <p className="text-[10px] text-gray-400 font-black uppercase">Origin</p>
-            </div>
-          </div>
-        </div>
-      </section>
+            const scrollToSection = (id) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            };
 
-      {/* Benefits Section */}
-      <section id="benefits" className="py-20 md:py-32 border-t border-gray-50">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight mb-12 md:mb-20 underline decoration-blue-600 decoration-8 underline-offset-[12px]">Core Advantages</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10">
-            {[
-              { Icon: ZapIcon, title: "Ultra Efficient", desc: "Energy-saving technology optimized for sustainability." },
-              { Icon: MonitorIcon, title: "Android 13 Native", desc: "Seamless integration with global streaming platforms." },
-              { Icon: SettingsIcon, title: "Auto-Control", desc: "Intelligent auto-focus and keystone correction." },
-              { Icon: SmartphoneIcon, title: "Connected", desc: "Wi-Fi 6 and Bluetooth 5.0 for low-latency streaming." }
-            ].map((item, i) => (
-              <div key={i} className="p-8 md:p-10 bg-gray-50 rounded-[32px] hover:bg-white hover:shadow-2xl transition-all duration-500 border border-transparent hover:border-gray-100 text-left group">
-                <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-2xl flex items-center justify-center mb-6 md:mb-8 shadow-sm group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                  <item.Icon size={28} />
+            return (
+                <div className="min-h-screen bg-white font-sans text-gray-900 w-full overflow-x-hidden">
+                    {/* Navbar */}
+                    <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100">
+                        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-black italic">Z</div>
+                                <span className="text-xl font-black text-blue-900 tracking-tighter uppercase">Zeus</span>
+                            </div>
+                            <div className="hidden md:flex gap-8 text-[11px] font-black text-gray-400 uppercase tracking-widest">
+                                <button onClick={() => scrollToSection('benefits')} className="hover:text-blue-600 transition">Benefits</button>
+                                <button onClick={() => scrollToSection('proof')} className="hover:text-blue-600 transition">Proven</button>
+                                <button onClick={() => scrollToSection('info')} className="hover:text-blue-600 transition">Exhibition</button>
+                            </div>
+                            <button 
+                                onClick={() => scrollToSection('reserve')}
+                                className="bg-blue-600 text-white px-6 py-2 rounded-full text-[10px] font-black uppercase shadow-lg shadow-blue-200 transition-colors hover:bg-blue-700"
+                            >
+                                IFA 2026 RSVP
+                            </button>
+                        </div>
+                    </nav>
+
+                    {/* Hero Section */}
+                    <section className="pt-32 pb-24 md:pt-56 md:pb-48 bg-gradient-to-b from-white to-blue-50/20 flex items-center justify-center">
+                        <div className="max-w-4xl mx-auto px-4 md:px-6 text-center space-y-10 animate-fade-in-up">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-[12px] font-black uppercase tracking-widest mx-auto">
+                                <GlobalIcon /> IFA 2026 · Berlin · Hall 3.2
+                            </div>
+                            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-gray-900 leading-tight tracking-tighter">
+                                Ready to <br/>Replace Your TV? <br/>
+                                <span className="text-blue-600">Zeus Projector</span>
+                            </h1>
+                            <p className="text-lg md:text-2xl text-gray-500 max-w-3xl mx-auto font-medium leading-relaxed">
+                                Experience the pinnacle of K-Tech innovation for global buyers. <br className="hidden md:block"/>
+                                Ultra-efficient power management and Android 13 integration. 
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-6 justify-center pt-4">
+                                <button 
+                                    onClick={() => scrollToSection('reserve')}
+                                    className="px-10 py-5 bg-blue-600 text-white rounded-2xl font-black text-lg uppercase tracking-widest hover:bg-blue-700 shadow-2xl shadow-blue-200 flex items-center justify-center gap-3 transition-transform hover:scale-105"
+                                >
+                                    B2B PARTNERSHIP <ArrowRightIcon />
+                                </button>
+                                <button 
+                                    onClick={() => scrollToSection('reserve')}
+                                    className="px-10 py-5 bg-white border-2 border-gray-200 text-gray-900 rounded-2xl font-black text-lg uppercase tracking-widest hover:border-blue-300 transition-transform hover:scale-105"
+                                >
+                                    BOOK LIVE DEMO
+                                </button>
+                            </div>
+                            <div className="flex justify-center items-center gap-8 pt-10">
+                                <div className="text-center">
+                                    <p className="text-3xl font-black text-blue-600 tracking-tighter italic">95%</p>
+                                    <p className="text-[10px] text-gray-400 font-black uppercase">Sold Out</p>
+                                </div>
+                                <div className="w-px h-12 bg-gray-200" />
+                                <div className="text-center">
+                                    <p className="text-3xl font-black text-blue-600 tracking-tighter italic">4.9/5</p>
+                                    <p className="text-[10px] text-gray-400 font-black uppercase">User Rating</p>
+                                </div>
+                                <div className="w-px h-12 bg-gray-200" />
+                                <div className="text-center">
+                                    <p className="text-3xl font-black text-blue-600 tracking-tighter italic">K-Tech</p>
+                                    <p className="text-[10px] text-gray-400 font-black uppercase">Origin</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Benefits Section */}
+                    <section id="benefits" className="py-20 md:py-32 border-t border-gray-50">
+                        <div className="max-w-7xl mx-auto px-4 md:px-6 text-center">
+                            <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight mb-12 md:mb-20 underline decoration-blue-600 decoration-8 underline-offset-[12px]">Core Advantages</h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10">
+                                {[
+                                    { Icon: ZapIcon, title: "Ultra Efficient", desc: "Energy-saving technology optimized for sustainability." },
+                                    { Icon: MonitorIcon, title: "Android 13 Native", desc: "Seamless integration with global streaming platforms." },
+                                    { Icon: SettingsIcon, title: "Auto-Control", desc: "Intelligent auto-focus and keystone correction." },
+                                    { Icon: SmartphoneIcon, title: "Connected", desc: "Wi-Fi 6 and Bluetooth 5.0 for low-latency streaming." }
+                                ].map((item, i) => (
+                                    <div key={i} className="p-8 md:p-10 bg-gray-50 rounded-[32px] hover:bg-white hover:shadow-2xl transition-all duration-500 border border-transparent hover:border-gray-100 text-left group">
+                                        <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-2xl flex items-center justify-center mb-6 md:mb-8 shadow-sm group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                            <item.Icon size={28} />
+                                        </div>
+                                        <h4 className="text-lg md:text-xl font-black uppercase tracking-tight mb-4">{item.title}</h4>
+                                        <p className="text-gray-500 text-sm font-medium leading-relaxed">{item.desc}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Social Proof Section */}
+                    <section id="proof" className="py-20 px-4 md:px-6">
+                        <div className="max-w-7xl mx-auto bg-blue-900 rounded-[30px] md:rounded-[50px] p-8 md:p-24 text-white relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/30 blur-[120px] rounded-full" />
+                            <div className="relative z-10 grid lg:grid-cols-3 gap-12 md:gap-16 items-center">
+                                <div className="lg:col-span-1 text-left">
+                                    <h2 className="text-4xl md:text-5xl font-black italic tracking-tighter leading-none mb-6 md:mb-8">PROVEN IN <br/>SOUTH KOREA</h2>
+                                    <p className="text-blue-200 font-bold uppercase tracking-widest text-xs md:text-sm">Now scaling globally at IFA</p>
+                                </div>
+                                <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                                    <div className="p-6 md:p-8 bg-white/5 backdrop-blur-md rounded-2xl md:rounded-3xl border border-white/10">
+                                        <div className="flex gap-1 text-yellow-400 mb-4 md:mb-6">
+                                            {[...Array(5)].map((_, i) => <StarIcon key={i} />)}
+                                        </div>
+                                        <p className="text-base md:text-lg font-bold italic mb-6">"Revolutionary image quality at this price point. A must-have for home cinema."</p>
+                                        <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Tech Reviewer @Seoul</p>
+                                    </div>
+                                    <div className="p-6 md:p-8 bg-white/5 backdrop-blur-md rounded-2xl md:rounded-3xl border border-white/10">
+                                        <div className="flex gap-1 text-yellow-400 mb-4 md:mb-6">
+                                            {[...Array(5)].map((_, i) => <StarIcon key={i} />)}
+                                        </div>
+                                        <p className="text-base md:text-lg font-bold italic mb-6">"Low power usage and high brightness make it perfect for our cafe lounge."</p>
+                                        <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Business Partner B</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Info & Form Section */}
+                    <section id="info" className="py-20 md:py-32">
+                        <div className="max-w-7xl mx-auto px-4 md:px-6 grid lg:grid-cols-2 gap-16 md:gap-24 items-start text-left">
+                            <div>
+                                <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-8 md:mb-12">IFA 2026 <br/>Berlin Presence</h2>
+                                <div className="space-y-6 md:space-y-8">
+                                    <div className="flex gap-6 items-start">
+                                        <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0">
+                                            <CalendarIcon />
+                                        </div>
+                                        <div>
+                                            <h5 className="font-black uppercase text-xs tracking-widest text-gray-400 mb-1">Duration</h5>
+                                            <p className="text-lg md:text-xl font-bold">Sept 4 – 8, 2026</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-6 items-start">
+                                        <div className="w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center shrink-0 shadow-lg shadow-blue-200">
+                                            <MapPinIcon />
+                                        </div>
+                                        <div>
+                                            <h5 className="font-black uppercase text-xs tracking-widest text-gray-400 mb-1">Location</h5>
+                                            <p className="text-xl md:text-2xl font-black text-blue-900 tracking-tight">Hall 3.2 · Booth 123</p>
+                                            <p className="text-xs md:text-sm font-bold text-gray-500 uppercase">Messe Berlin, Germany</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="mt-12 md:mt-16 pt-12 md:pt-16 border-t border-gray-100">
+                                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600 mb-6">Exclusive On-Site Benefits</p>
+                                    <ul className="space-y-4">
+                                        {['Direct B2B Wholesale Pricing', 'IFA Limited Edition Bundles', 'Post-Exhibition Priority Lead'].map((item, i) => (
+                                            <li key={i} className="flex items-center gap-3 font-black text-[10px] md:text-xs uppercase italic">
+                                                <div className="w-2 h-2 bg-blue-600 rounded-full" /> {item}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div id="reserve" className="bg-white border border-gray-100 rounded-[30px] md:rounded-[50px] shadow-2xl p-8 md:p-16 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 -mr-16 -mt-16 rounded-full" />
+                                <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-8 md:mb-10">RSVP Meeting</h3>
+                                
+                                {isSubmitted ? (
+                                    <div className="py-24 text-center">
+                                        <div className="w-16 h-16 md:w-20 md:h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-8">
+                                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                        </div>
+                                        <h4 className="text-xl md:text-2xl font-black uppercase">Confirmed</h4>
+                                        <p className="text-gray-500 font-bold mt-2">Check your email for details.</p>
+                                    </div>
+                                ) : (
+                                    <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
+                                        <div className="flex gap-2 p-1.5 bg-gray-100 rounded-2xl mb-6">
+                                            <button 
+                                                type="button" 
+                                                onClick={() => setFormData({...formData, type: 'buyer'})}
+                                                className={`flex-1 py-3 rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all ${formData.type === 'buyer' ? 'bg-white shadow-md text-blue-600' : 'text-gray-400'}`}
+                                            >
+                                                B2B Partner
+                                            </button>
+                                            <button 
+                                                type="button"
+                                                onClick={() => setFormData({...formData, type: 'visitor'})}
+                                                className={`flex-1 py-3 rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all ${formData.type === 'visitor' ? 'bg-white shadow-md text-blue-600' : 'text-gray-400'}`}
+                                            >
+                                                Guest Demo
+                                            </button>
+                                        </div>
+                                        <input 
+                                            type="text" required placeholder="Full Name" 
+                                            className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl md:rounded-2xl focus:ring-2 focus:ring-blue-600 font-bold text-sm"
+                                        />
+                                        <input 
+                                            type="email" required placeholder="Business Email" 
+                                            className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl md:rounded-2xl focus:ring-2 focus:ring-blue-600 font-bold text-sm"
+                                        />
+                                        <select className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl md:rounded-2xl focus:ring-2 focus:ring-blue-600 font-black uppercase text-[10px] tracking-widest">
+                                            <option>Select Visit Date</option>
+                                            <option>Sept 4 (Fri)</option>
+                                            <option>Sept 5 (Sat)</option>
+                                            <option>Sept 6 (Sun)</option>
+                                            <option>Sept 7 (Mon)</option>
+                                            <option>Sept 8 (Tue)</option>
+                                        </select>
+                                        <button type="submit" className="w-full py-4 md:py-5 bg-blue-900 text-white rounded-xl md:rounded-2xl font-black uppercase tracking-[0.2em] hover:bg-black transition-colors shadow-xl shadow-blue-100">
+                                            Confirm RSVP
+                                        </button>
+                                    </form>
+                                )}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Footer Section */}
+                    <footer className="py-16 md:py-20 bg-gray-50 border-t border-gray-100">
+                        <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row justify-between items-center gap-10">
+                            <div className="text-left">
+                                <div className="flex items-center gap-2 mb-6">
+                                    <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center text-white font-bold italic text-xs">Z</div>
+                                    <span className="text-lg font-black tracking-tighter text-blue-900 uppercase">Zeus</span>
+                                </div>
+                                <p className="text-[9px] font-black uppercase tracking-widest text-gray-400">© 2026 ZEUS BEAM PROJECTOR. DESIGNED IN SEOUL, KOREA.</p>
+                            </div>
+                            <div className="flex gap-8 md:gap-12 text-[9px] font-black uppercase tracking-widest text-gray-500">
+                                <button className="hover:text-blue-600 transition-colors">Privacy</button>
+                                <button className="hover:text-blue-600 transition-colors">Terms</button>
+                                <button className="hover:text-blue-600 transition-colors">Global Sales</button>
+                            </div>
+                        </div>
+                    </footer>
                 </div>
-                <h4 className="text-lg md:text-xl font-black uppercase tracking-tight mb-4">{item.title}</h4>
-                <p className="text-gray-500 text-sm font-medium leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            );
+        };
 
-      {/* Social Proof Section */}
-      <section id="proof" className="py-20 px-4 md:px-6">
-        <div className="max-w-7xl mx-auto bg-blue-900 rounded-[30px] md:rounded-[50px] p-8 md:p-24 text-white relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/30 blur-[120px] rounded-full" />
-          <div className="relative z-10 grid lg:grid-cols-3 gap-12 md:gap-16 items-center">
-            <div className="lg:col-span-1 text-left">
-              <h2 className="text-4xl md:text-5xl font-black italic tracking-tighter leading-none mb-6 md:mb-8">PROVEN IN <br/>SOUTH KOREA</h2>
-              <p className="text-blue-200 font-bold uppercase tracking-widest text-xs md:text-sm">Now scaling globally at IFA</p>
-            </div>
-            <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-              <div className="p-6 md:p-8 bg-white/5 backdrop-blur-md rounded-2xl md:rounded-3xl border border-white/10">
-                <div className="flex gap-1 text-yellow-400 mb-4 md:mb-6">
-                  {[...Array(5)].map((_, i) => <StarIcon key={i} />)}
-                </div>
-                <p className="text-base md:text-lg font-bold italic mb-6">"Revolutionary image quality at this price point. A must-have for home cinema."</p>
-                <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Tech Reviewer @Seoul</p>
-              </div>
-              <div className="p-6 md:p-8 bg-white/5 backdrop-blur-md rounded-2xl md:rounded-3xl border border-white/10">
-                <div className="flex gap-1 text-yellow-400 mb-4 md:mb-6">
-                  {[...Array(5)].map((_, i) => <StarIcon key={i} />)}
-                </div>
-                <p className="text-base md:text-lg font-bold italic mb-6">"Low power usage and high brightness make it perfect for our cafe lounge."</p>
-                <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Business Partner B</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Info & Form Section */}
-      <section id="info" className="py-20 md:py-32">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 grid lg:grid-cols-2 gap-16 md:gap-24 items-start text-left">
-          <div>
-            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-8 md:mb-12">IFA 2026 <br/>Berlin Presence</h2>
-            <div className="space-y-6 md:space-y-8">
-              <div className="flex gap-6 items-start">
-                <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0">
-                  <CalendarIcon />
-                </div>
-                <div>
-                  <h5 className="font-black uppercase text-xs tracking-widest text-gray-400 mb-1">Duration</h5>
-                  <p className="text-lg md:text-xl font-bold">Sept 4 – 8, 2026</p>
-                </div>
-              </div>
-              <div className="flex gap-6 items-start">
-                <div className="w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center shrink-0 shadow-lg shadow-blue-200">
-                  <MapPinIcon />
-                </div>
-                <div>
-                  <h5 className="font-black uppercase text-xs tracking-widest text-gray-400 mb-1">Location</h5>
-                  <p className="text-xl md:text-2xl font-black text-blue-900 tracking-tight">Hall 3.2 · Booth 123</p>
-                  <p className="text-xs md:text-sm font-bold text-gray-500 uppercase">Messe Berlin, Germany</p>
-                </div>
-              </div>
-            </div>
-            <div className="mt-12 md:mt-16 pt-12 md:pt-16 border-t border-gray-100">
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600 mb-6">Exclusive On-Site Benefits</p>
-              <ul className="space-y-4">
-                {['Direct B2B Wholesale Pricing', 'IFA Limited Edition Bundles', 'Post-Exhibition Priority Lead'].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 font-black text-[10px] md:text-xs uppercase italic">
-                    <div className="w-2 h-2 bg-blue-600 rounded-full" /> {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div id="reserve" className="bg-white border border-gray-100 rounded-[30px] md:rounded-[50px] shadow-2xl p-8 md:p-16 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 -mr-16 -mt-16 rounded-full" />
-            <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-8 md:mb-10">RSVP Meeting</h3>
-            
-            {isSubmitted ? (
-              <div className="py-24 text-center">
-                <div className="w-16 h-16 md:w-20 md:h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-8">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
-                </div>
-                <h4 className="text-xl md:text-2xl font-black uppercase">Confirmed</h4>
-                <p className="text-gray-500 font-bold mt-2">Check your email for details.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
-                <div className="flex gap-2 p-1.5 bg-gray-100 rounded-2xl mb-6">
-                  <button 
-                    type="button" 
-                    onClick={() => setFormData({...formData, type: 'buyer'})}
-                    className={`flex-1 py-3 rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all ${formData.type === 'buyer' ? 'bg-white shadow-md text-blue-600' : 'text-gray-400'}`}
-                  >
-                    B2B Partner
-                  </button>
-                  <button 
-                    type="button"
-                    onClick={() => setFormData({...formData, type: 'visitor'})}
-                    className={`flex-1 py-3 rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all ${formData.type === 'visitor' ? 'bg-white shadow-md text-blue-600' : 'text-gray-400'}`}
-                  >
-                    Guest Demo
-                  </button>
-                </div>
-                <input 
-                  type="text" required placeholder="Full Name" 
-                  className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl md:rounded-2xl focus:ring-2 focus:ring-blue-600 font-bold text-sm"
-                />
-                <input 
-                  type="email" required placeholder="Business Email" 
-                  className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl md:rounded-2xl focus:ring-2 focus:ring-blue-600 font-bold text-sm"
-                />
-                <select className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl md:rounded-2xl focus:ring-2 focus:ring-blue-600 font-black uppercase text-[10px] tracking-widest">
-                  <option>Select Visit Date</option>
-                  <option>Sept 4 (Fri)</option>
-                  <option>Sept 5 (Sat)</option>
-                  <option>Sept 6 (Sun)</option>
-                  <option>Sept 7 (Mon)</option>
-                  <option>Sept 8 (Tue)</option>
-                </select>
-                <button type="submit" className="w-full py-4 md:py-5 bg-blue-900 text-white rounded-xl md:rounded-2xl font-black uppercase tracking-[0.2em] hover:bg-black transition-colors shadow-xl shadow-blue-100">
-                  Confirm RSVP
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Footer Section */}
-      <footer className="py-16 md:py-20 bg-gray-50 border-t border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row justify-between items-center gap-10">
-          <div className="text-left">
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center text-white font-bold italic text-xs">Z</div>
-              <span className="text-lg font-black tracking-tighter text-blue-900 uppercase">Zeus</span>
-            </div>
-            <p className="text-[9px] font-black uppercase tracking-widest text-gray-400">© 2026 ZEUS BEAM PROJECTOR. DESIGNED IN SEOUL, KOREA.</p>
-          </div>
-          <div className="flex gap-8 md:gap-12 text-[9px] font-black uppercase tracking-widest text-gray-500">
-            <button className="hover:text-blue-600 transition-colors">Privacy</button>
-            <button className="hover:text-blue-600 transition-colors">Terms</button>
-            <button className="hover:text-blue-600 transition-colors">Global Sales</button>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-};
-
-export default App;
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
